@@ -1,0 +1,22 @@
+group 'com.steveperkins.tls'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.bettercloud:vault-java-driver:2.0.0'
+    compile 'org.bouncycastle:bcpkix-jdk15on:1.54'
+    compile 'org.apache.kafka:kafka-clients:0.10.1.1'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
+    testCompile 'junit:junit:4.11'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = 3.3
+}
