@@ -1,2 +1,6 @@
 .gradle
 .idea
+consumer-keystore.jks
+consumer-truststore.jks
+producer-keystore.jks
+producer-truststore.jks
