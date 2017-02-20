@@ -1,13 +1,14 @@
 kafka-tls-demo
 ==============
+The repository is a demo of using [Vault](https://www.vaultproject.io) as an internal certificate authority, to 
+secure an [Apache Kafka](https://kafka.apache.org) broker with transport-layer security.
 
 
-
-Setup
+Steps
 =====
 
-Run Vault
----------
+#1 Run Vault
+------------
 * Download [Vault](https://www.vaultproject.io/downloads.html), and startup an instance in dev mode:
 
 ```
@@ -37,8 +38,8 @@ vault write pki/issue/kafka-broker common_name=kafka-broker.example.com
 
 The `writers.hcl` file is located in the root of this repo.
 
-Create Root CA
---------------
+#2 Create a Root CA
+-------------------
 
 * That last Vault command will write to the console three blocks of text in PEM format.  Copy those three blocks into 
   text files named `certificate.pem`, `issuing_ca.pem`, and `private_key.pem`.
@@ -67,8 +68,8 @@ openssl x509 -in issuing_ca.pem -out ca.der -outform der
 keytool.exe -importcert -alias CARoot -file ca.der -keystore truststore.jks
 ```
 
-Setup Kafka broker
-------------------
+#3 Setup a Kafka broker
+-----------------------
 
 * Download [Apache Kafka](https://kafka.apache.org/downloads), and unzip it somewhere on your filesystem.
 
@@ -92,7 +93,7 @@ ssl.client.auth=required
 * In a command-line shell, from the Kafka root directory, start a ZooKeeper instance:
 
 ```
-bin\zookeeper-server-start.sh config\zookeeper.properties
+bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 or
 ```
@@ -102,7 +103,7 @@ bin\windows\zookeeper-server-start.bat config\zookeeper.properties
 * In another shell, startup the Kafka broker:
 
 ```
-bin\kafka-server-start.sh config\server.properties
+bin/kafka-server-start.sh config/server.properties
 ```
 or
 ```
@@ -112,15 +113,15 @@ bin\windows\kafka-server-start.bat config\server.properties
 * In yet another shell, create a "test" Kafka topic:
 
 ```
-bin\kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
 ```
 or
 ```
 bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
 ```
 
-Run Kafka producer and consumer
--------------------------------
+#4 Run the Kafka producer and consumer
+--------------------------------------
 
 * Run the `com.steveperkins.tls.ProducerApp` class in this project.  Verify that it connects to Kafka, and that 
   every couple of seconds it is writing to the console that it just produced a new message.
@@ -129,5 +130,4 @@ Run Kafka producer and consumer
   every couple of seconds it is writing to the console that it just received a new message produced by `ProducerApp`.
   
 * Terminate both processes once you are done.
-
 
